@@ -1,0 +1,23 @@
+{
+  "name": "dialogflow-shapes",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "test": "sudo nodejs app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/galsasson/dialogflow-shapes.git"
+  },
+  "author": "Gal Sasson",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/galsasson/dialogflow-shapes/issues"
+  },
+  "homepage": "https://github.com/galsasson/dialogflow-shapes#readme",
+  "dependencies": {
+    "body-parser": "^1.18.2",
+    "express": "^4.16.2"
+  }
+}
