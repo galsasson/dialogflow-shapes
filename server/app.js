@@ -24,6 +24,18 @@ app.get('/', function (req, res) {
    res.send('Hello World!');
 });
 
+
+// Game elements
+var lastColors = [];
+
+
+app.get('/colors/addkey', function (req, res) {
+   var k = req.query.key;
+   console.log('Adding key: '+k);
+   lastColors.push(k);
+   res.send('key added');
+});
+
 app.post('/', function (req, res) {
   console.log('Server got POST request');
   //console.log(req);
