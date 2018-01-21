@@ -1,5 +1,8 @@
 
-boolean[] pressed = {false,false,false,false};
+boolean upPressed = false;
+boolean downPressed = false;
+boolean rightPressed = false;
+boolean leftPressed = false;
 
 void setup()
 {
@@ -8,58 +11,49 @@ void setup()
 
 void draw()
 {
-  fill(0, 0, pressed[0]?255:100);
+  fill(0, 0, rightPressed?255:100);
   rect(0, 0, 140, 140);  
-  fill(pressed[1]?255:100, 0, 0);
+  fill(leftPressed?255:100, 0, 0);
   rect(150, 0, 140, 140);
-  fill(pressed[2]?255:100, pressed[2]?255:100, 0);
+  fill(upPressed?255:100, upPressed?255:100, 0);
   rect(300, 0, 140, 140);
-  fill(0, pressed[3]?255:100, 0);
+  fill(0, downPressed?255:100, 0);
   rect(450, 0, 140, 140);
 }
 
 void keyPressed()
 {
-  if (key >= '1' && key <= '4') {
-    if (pressed[key-'1']) {
-      return;
-    }
-  }
-  else {
-    return;
-  }
-  
-  if (key == '1') {
+  if (keyCode == RIGHT && !rightPressed) {
     addKey("blue");
-    pressed[0]=true;
+    rightPressed=true;
   }
-  else if (key == '2') {
+  else if (keyCode == LEFT && !leftPressed) {
     addKey("red");
-    pressed[1]=true;
+    leftPressed=true;
   }
-  else if (key == '3') {
+  else if (keyCode == UP && !upPressed) {
     addKey("yellow");
-    pressed[2]=true;
+    upPressed=true;
   }
-  else if (key == '4') {
+  else if (keyCode == DOWN && !downPressed) {
     addKey("green");
-    pressed[3]=true;
+    downPressed=true;
   }
 }
 
 void keyReleased()
 {
-  if (key == '1') {
-    pressed[0]=false;
+  if (keyCode == RIGHT) {
+    rightPressed=false;
   }
-  else if (key == '2') {
-    pressed[1]=false;
+  else if (keyCode == LEFT) {
+    leftPressed=false;
   }
-  else if (key == '3') {
-    pressed[2]=false;
+  else if (keyCode == UP) {
+    upPressed=false;
   }
-  else if (key == '4') {
-    pressed[3]=false;
+  else if (keyCode == DOWN) {
+    downPressed=false;
   }
 }
 
