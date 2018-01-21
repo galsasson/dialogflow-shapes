@@ -26,18 +26,28 @@ app.get('/', function (req, res) {
 
 
 // Game elements
-var lastColors = [];
+var colors = [];
 
+app.get('/colors/clear', function(req, res) {
+   console.log('clear colors');
+   res.send('clear done');
+});
 
-app.get('/colors/addkey', function (req, res) {
+app.get('/colors/get', function(req, res) {
+   console.log('existing colors: ');
+   console.log(colors);
+   res.send('existing colors: '+colors);
+});
+
+app.get('/colors/add', function (req, res) {
    var k = req.query.key;
    console.log('Adding key: '+k);
-   lastColors.push(k);
+   colors.push(k);
    res.send('key added');
 });
 
-app.post('/', function (req, res) {
-  console.log('Server got POST request');
+app.post('/colors/voice', function (req, res) {
+  console.log('got voice POST request');
   //console.log(req);
   processV2Request(req, res);
 });
