@@ -26,10 +26,20 @@ app.get('/', function (req, res) {
 
 
 // Game elements
-var colors = [];
+var colors = ['red','blue','red'];
+
+var clearColors = function()
+{
+   colors = [];
+}
+
+var checkColors = function(player)
+{
+}
 
 app.get('/colors/clear', function(req, res) {
    console.log('clear colors');
+   clearColors();
    res.send('clear done');
 });
 
@@ -117,6 +127,12 @@ function processV2Request (request, response) {
       }
       askCount++;
     },
+    'input.check_p2': () => {
+	checkColors(2,parameters);
+    },
+    'input.check_p1': () => {
+        checkColors(1,parameters);
+    },
     // Default handler for unknown or undefined actions
     'default': () => {
       let responseToUser = {
@@ -156,6 +172,54 @@ function processV2Request (request, response) {
       console.log('Response to Dialogflow: ' + JSON.stringify(responseJson));
       response.json(responseJson);
     }
+  }
+
+  function checkColors(player, parameters)
+  {
+      console.log(parameters);
+      var voiceColors = parameters['button-type'];
+      var otherPlayer=2;
+      if (player==2) {
+        otherPlayer=1;
+      }
+      if (voiceColors.length > colors.length) {
+	    let r = {
+		fulfillmentText: 'Too many colors, player '+otherPlayer+' pressed on '+colors.length+' colors. Try again.',
+		outputContexts: [{'name': 'projects/<Project ID>/agent/sessions/<Session ID>/contexts/insert_color_player_'+otherPlayer, 'lifespanCount': 1, 'parameters':{}}]
+	    };
+            sendResponse(r);
+      }
+      else if (voiceColors.length < colors.length) {
+	    let r = {
+		fulfillmentText: 'Too few colors, player '+otherPlayer+' pressed on '+colors.length+' colors. Try again.',
+		outputContexts: [{'name': 'projects/<Project ID>/agent/sessions/<Session ID>/contexts/insert_color_player_'+otherPlayer, 'lifespanCount': 1, 'parameters':{}}]
+	    };
+            sendResponse(r);
+      }
+      else {
+         var equals=true;
+         for (var i=0; i<colors.length; i++) {
+             if (colors[i] != voiceColors[i]) {
+                equals=false;
+             }
+         }
+
+         if (equals) {
+	    let r = {
+		fulfillmentText: 'Correct!!!',
+		outputContexts: [{'name': 'projects/<Project ID>/agent/sessions/<Session ID>/contexts/right_response_'+otherPlayer, 'lifespanCount': 1, 'parameters':{}},
+                                 {'name': 'projects/<Project ID>/agent/sessions/<Session ID>/contexts/insert_color_player_'+otherPlayer, 'lifespanCount': 0, 'parameters':{}}]
+	    };
+            sendResponse(r);
+         }
+         else {
+	    let r = {
+		fulfillmentText: 'Wrong, please try again!',
+		outputContexts: [{'name': 'projects/<Project ID>/agent/sessions/<Session ID>/contexts/insert_color_player_'+otherPlayer, 'lifespanCount': 1, 'parameters':{}}]
+	    };
+            sendResponse(r);
+         }
+      }
   }
 }
 
