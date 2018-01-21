@@ -65,16 +65,20 @@ void keyReleased()
 
 void addKey(String key)
 {
-  //return;
-  
+  final String fKey = key;
   try {
-    String response[] = loadStrings("https://myexperiments.work:8080/colors/addkey?key="+key);
-    for (String s : response) {
-      println(s);
-    }
+    new Thread(new Runnable() {
+      public void run() {
+        String response[] = loadStrings("https://myexperiments.work:8080/colors/add?key="+fKey);
+        if (response != null) {
+          for (String s : response) {
+            println(s);
+          }
+        }
+      }
+    }).start();
   }
   catch(Exception e) {
     println(e);
-  }
-  
+  } 
 }
