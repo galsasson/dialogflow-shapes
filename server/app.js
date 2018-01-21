@@ -33,10 +33,6 @@ var clearColors = function()
    colors = [];
 }
 
-var checkColors = function(player)
-{
-}
-
 app.get('/colors/clear', function(req, res) {
    console.log('clear colors');
    clearColors();
@@ -184,14 +180,14 @@ function processV2Request (request, response) {
       }
       if (voiceColors.length > colors.length) {
 	    let r = {
-		fulfillmentText: 'Too many colors, player '+otherPlayer+' pressed on '+colors.length+' colors. Try again.',
+		fulfillmentText: 'You said too many color, please say only 3.',
 		outputContexts: [{'name': 'projects/<Project ID>/agent/sessions/<Session ID>/contexts/insert_color_player_'+otherPlayer, 'lifespanCount': 1, 'parameters':{}}]
 	    };
             sendResponse(r);
       }
       else if (voiceColors.length < colors.length) {
 	    let r = {
-		fulfillmentText: 'Too few colors, player '+otherPlayer+' pressed on '+colors.length+' colors. Try again.',
+		fulfillmentText: 'You didn\'t say enough colors. Player '+otherPlayer+' try again.',
 		outputContexts: [{'name': 'projects/<Project ID>/agent/sessions/<Session ID>/contexts/insert_color_player_'+otherPlayer, 'lifespanCount': 1, 'parameters':{}}]
 	    };
             sendResponse(r);
@@ -205,8 +201,9 @@ function processV2Request (request, response) {
          }
 
          if (equals) {
+	    clearColors();
 	    let r = {
-		fulfillmentText: 'Correct!!!',
+		fulfillmentText: 'Awesome! Now we switch turns. Player '+otherPlayer+', press 3 colors and say MEMO RAINBOW',
 		outputContexts: [{'name': 'projects/<Project ID>/agent/sessions/<Session ID>/contexts/right_response_'+otherPlayer, 'lifespanCount': 1, 'parameters':{}},
                                  {'name': 'projects/<Project ID>/agent/sessions/<Session ID>/contexts/insert_color_player_'+otherPlayer, 'lifespanCount': 0, 'parameters':{}}]
 	    };
@@ -214,7 +211,7 @@ function processV2Request (request, response) {
          }
          else {
 	    let r = {
-		fulfillmentText: 'Wrong, please try again!',
+		fulfillmentText: 'I\'m sorry, that was not right, player '+player+' try again.',
 		outputContexts: [{'name': 'projects/<Project ID>/agent/sessions/<Session ID>/contexts/insert_color_player_'+otherPlayer, 'lifespanCount': 1, 'parameters':{}}]
 	    };
             sendResponse(r);
