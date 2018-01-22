@@ -30,6 +30,7 @@ var colors = ['red','blue','red'];
 
 var clearColors = function()
 {
+   console.log('Clearing colors');
    colors = [];
 }
 
@@ -80,7 +81,22 @@ function processV2Request (request, response) {
   const actionHandlers = {
     // The default welcome intent has been matched, welcome the user (https://dialogflow.com/docs/events#default_welcome_intent)
     'input.welcome': () => {
-      sendResponse('Hello, Welcome to my Dialogflow agent!'); // Send simple response to user
+	clearColors();
+	let r = {
+	  fulfillmentText: 'Hi there. To start the game lets say together Memo Rainbow.',
+	  outputContexts: [{'name': `${session}/contexts/new_game`, 'lifespanCount': 10, 'parameters':{}}]
+	};
+        sendResponse(r);
+        
+      //sendResponse('Hello, Welcome to my Dialogflow agent!'); // Send simple response to user
+    },
+    'colors.clear': () => {
+        clearColors();
+	let r = {
+	  fulfillmentText: 'Hi there. To start the game lets say together Memo Rainbow.',
+	  outputContexts: [{'name': `${session}/contexts/new_game`, 'lifespanCount': 10, 'parameters':{}}]
+	};
+        sendResponse(r);
     },
     // The default fallback intent has been matched, try to recover (https://dialogflow.com/docs/intents#fallback_intents)
     'input.unknown': () => {
@@ -181,14 +197,14 @@ function processV2Request (request, response) {
       if (voiceColors.length > colors.length) {
 	    let r = {
 		fulfillmentText: 'You said too many color, please say only 3.',
-		outputContexts: [{'name': 'projects/<Project ID>/agent/sessions/<Session ID>/contexts/insert_color_player_'+otherPlayer, 'lifespanCount': 1, 'parameters':{}}]
+		outputContexts: [{'name': `${session}/contexts/insert_color_player_`+otherPlayer, 'lifespanCount': 10, 'parameters':{}}]
 	    };
             sendResponse(r);
       }
       else if (voiceColors.length < colors.length) {
 	    let r = {
 		fulfillmentText: 'You didn\'t say enough colors. Player '+otherPlayer+' try again.',
-		outputContexts: [{'name': 'projects/<Project ID>/agent/sessions/<Session ID>/contexts/insert_color_player_'+otherPlayer, 'lifespanCount': 1, 'parameters':{}}]
+		outputContexts: [{'name': `${session}/contexts/insert_color_player_`+otherPlayer, 'lifespanCount': 10, 'parameters':{}}]
 	    };
             sendResponse(r);
       }
@@ -203,16 +219,16 @@ function processV2Request (request, response) {
          if (equals) {
 	    clearColors();
 	    let r = {
-		fulfillmentText: 'Awesome! Now we switch turns. Player '+otherPlayer+', press 3 colors and say MEMO RAINBOW',
-		outputContexts: [{'name': 'projects/<Project ID>/agent/sessions/<Session ID>/contexts/right_response_'+otherPlayer, 'lifespanCount': 1, 'parameters':{}},
-                                 {'name': 'projects/<Project ID>/agent/sessions/<Session ID>/contexts/insert_color_player_'+otherPlayer, 'lifespanCount': 0, 'parameters':{}}]
+		fulfillmentText: 'Awesome, you got it! Give each other high five and say memo finish.',
+		outputContexts: [{'name': `${session}/contexts/right_response_`+otherPlayer, 'lifespanCount': 10, 'parameters':{}},
+                                 {'name': `${session}/contexts/insert_color_player_`+otherPlayer, 'lifespanCount': 0, 'parameters':{}}]
 	    };
             sendResponse(r);
          }
          else {
 	    let r = {
 		fulfillmentText: 'I\'m sorry, that was not right, player '+player+' try again.',
-		outputContexts: [{'name': 'projects/<Project ID>/agent/sessions/<Session ID>/contexts/insert_color_player_'+otherPlayer, 'lifespanCount': 1, 'parameters':{}}]
+		outputContexts: [{'name': `${session}/contexts/insert_color_player_`+otherPlayer, 'lifespanCount': 10, 'parameters':{}}]
 	    };
             sendResponse(r);
          }
