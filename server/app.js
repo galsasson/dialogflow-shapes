@@ -204,14 +204,14 @@ function processV2Request (request, response) {
       }
       if (voiceColors.length > colors.length) {
 	    let r = {
-		fulfillmentText: 'You said too many colors, please say only 3.',
+		fulfillmentText: 'You said too many colors, please say only '+colors.length+'.',
 		outputContexts: [{'name': `${session}/contexts/insert_color_player_`+otherPlayer, 'lifespanCount': 10, 'parameters':{}}]
 	    };
             sendResponse(r);
       }
       else if (voiceColors.length < colors.length) {
 	    let r = {
-		fulfillmentText: 'You didn\'t say enough colors. Player '+player+' try again.',
+		fulfillmentText: 'You didn\'t say enough colors, Please say '+colors.length+' colors.',
 		outputContexts: [{'name': `${session}/contexts/insert_color_player_`+otherPlayer, 'lifespanCount': 10, 'parameters':{}}]
 	    };
             sendResponse(r);
@@ -227,7 +227,7 @@ function processV2Request (request, response) {
          if (equals) {
 	    clearColors();
 	    let r = {
-		fulfillmentText: 'Awesome, you got it! Give each other a high five and say: "Memo Finish".',
+		fulfillmentText: '<speak><audio src="https://myexperiments.work:8080/colors/sounds/tada.mp3"></audio>Awesome, you got it! Give each other a high five and say: "Memo Finish".</speak>',
 		outputContexts: [{'name': `${session}/contexts/right_response_`+otherPlayer, 'lifespanCount': 10, 'parameters':{}},
                                  {'name': `${session}/contexts/insert_color_player_`+otherPlayer, 'lifespanCount': 0, 'parameters':{}}]
 	    };
