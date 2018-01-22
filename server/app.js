@@ -59,6 +59,8 @@ app.post('/colors/voice', function (req, res) {
   processV2Request(req, res);
 });
 
+app.use('/colors/sounds', express.static('html'));
+
 https.createServer(options, app).listen(port, function () {
    console.log('Started listening on port: '+port);
 });
@@ -153,6 +155,12 @@ function processV2Request (request, response) {
         fulfillmentText: 'This is from Dialogflow\'s Cloud Functions for Firebase editor! :-)' // displayed response
      };
       sendResponse(responseToUser);
+    },
+    'test.sound': () => {
+      let responseToUser = {
+        fulfillmentMessages: richResponsesV2
+      };
+      sendResponse(responseToUser);
     }
   };
   // If undefined or unknown action use the default handler
@@ -196,14 +204,14 @@ function processV2Request (request, response) {
       }
       if (voiceColors.length > colors.length) {
 	    let r = {
-		fulfillmentText: 'You said too many color, please say only 3.',
+		fulfillmentText: 'You said too many colors, please say only 3.',
 		outputContexts: [{'name': `${session}/contexts/insert_color_player_`+otherPlayer, 'lifespanCount': 10, 'parameters':{}}]
 	    };
             sendResponse(r);
       }
       else if (voiceColors.length < colors.length) {
 	    let r = {
-		fulfillmentText: 'You didn\'t say enough colors. Player '+otherPlayer+' try again.',
+		fulfillmentText: 'You didn\'t say enough colors. Player '+player+' try again.',
 		outputContexts: [{'name': `${session}/contexts/insert_color_player_`+otherPlayer, 'lifespanCount': 10, 'parameters':{}}]
 	    };
             sendResponse(r);
@@ -219,7 +227,7 @@ function processV2Request (request, response) {
          if (equals) {
 	    clearColors();
 	    let r = {
-		fulfillmentText: 'Awesome, you got it! Give each other high five and say memo finish.',
+		fulfillmentText: 'Awesome, you got it! Give each other a high five and say: "Memo Finish".',
 		outputContexts: [{'name': `${session}/contexts/right_response_`+otherPlayer, 'lifespanCount': 10, 'parameters':{}},
                                  {'name': `${session}/contexts/insert_color_player_`+otherPlayer, 'lifespanCount': 0, 'parameters':{}}]
 	    };
@@ -235,4 +243,20 @@ function processV2Request (request, response) {
       }
   }
 }
+
+
+const richResponsesV2 = [
+  {
+    'platform': 'ACTIONS_ON_GOOGLE',
+    'simple_responses': {
+      'simple_responses': [
+        {
+          //'text_to_speech': 'Spoken simple response',
+          'ssml': '<speak>hahahaha<break time="3s"/>hahahaha<audio src="https://actions.google.com/sounds/v1/alarms/digital_watch_alarm_long.ogg">a digital watch alarm</audio></speak>',
+          'display_text': 'Displayed simple response'
+        }
+      ]
+    }
+  }
+];
 
